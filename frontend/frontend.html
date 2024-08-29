@@ -69,8 +69,7 @@
                     "text":["chemical weathering", "mechanical weathering", "water erosion", "wind erosion"]
                 },
                 "question": "Many natural rock formations change color over time. In Utah, for example, iron oxidized and formed red, orange, and yellow rock. Which of the following is the cause of this change?"
-            }
-            ];
+            }];
         function incQ(){
             count++;
             if(count===(questions.length-1)){
@@ -130,29 +129,31 @@
                 alert('incorrect answer! :(');
             }
             total[count] = true; // answered
-            console.log(score, count, total);
             selectedAnswer[0].classList.toggle("active");
             
             checker = total.every(Boolean);
             if(checker){
                 alert("you got " + score + " questions correct out of " + questions.length);
+                console.log(trackingAnswers);
+                let qs = '';
+                questions.forEach(question => {
+                    qs += question.answerKey + ' ';
+                });
+                document.getElementById("scorespot").innerHTML = score + " / " + questions.length + '\nYour Answers: ' + trackingAnswers.toString() + "\ncorrect answers: " + qs;
+                document.getElementById("qTracker").innerHTML = (count+1) + " / " + questions.length;
             }
-            console.log(trackingAnswers);
+            if(trackingAnswers[count]==='A' || trackingAnswers[count]==='B' || trackingAnswers[count]==='C' || trackingAnswers[count]==='D' ){
+                document.getElementById("submission").disabled = true;
+            }
         }
         function setQ(elm){
             var hold = elm.getAttribute('data-choice');
             console.log(hold);
             elm.classList.toggle("active");
-            if (document.getElementById("submission").disabled) {
-                document.getElementById("submission").disabled = false;
-            }else{
-                if(trackingAnswers[count]){
-                    // havent answered it yet
-                    document.getElementById("submission").disabled = true;
-                }
+            document.getElementById("submission").disabled = false;
+            if(trackingAnswers[count]==='A' || trackingAnswers[count]==='B' || trackingAnswers[count]==='C' || trackingAnswers[count]==='D' ){
                 document.getElementById("submission").disabled = true;
             }
-
             let a = document.getElementById("optionA");
             let b = document.getElementById("optionB");
             let c = document.getElementById("optionC");
