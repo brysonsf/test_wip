@@ -110,16 +110,27 @@
             document.getElementById("optionA").innerHTML = questions[count].choices.text[0];
             document.getElementById("optionB").innerHTML = questions[count].choices.text[1];
             document.getElementById("optionC").innerHTML = questions[count].choices.text[2];
-            document.getElementById("optionB").innerHTML = questions[count].choices.text[3];          
+            document.getElementById("optionD").innerHTML = questions[count].choices.text[3];          
         }
         function submitQ(){
             let selectedAnswer = document.getElementsByClassName("active");
+            let a = document.getElementById("optionA");
+            let b = document.getElementById("optionB");
+            let c = document.getElementById("optionC");
+            let d = document.getElementById("optionD");
             console.log(selectedAnswer[0].dataset.choice);// returns selection
             if(trackingAnswers[count]){
                 trackingAnswers[count] = selectedAnswer[0].dataset.choice;
             }
-            if(selectedAnswer[0].dataset.choice===questions[count].answerKey){    
-                selectedAnswer[0].classList.toggle("WOOHOO");
+		if(questions[count].answerKey==="A"){ a.classList.toggle("WOOHOO"); if(selectedAnswer[0].dataset.choice!=="B"){b.classList.toggle("OHNO");}if(selectedAnswer[0].dataset.choice!=="C"){c.classList.toggle("OHNO");}if(selectedAnswer[0].dataset.choice!=="D"){d.classList.toggle("OHNO");}
+		}
+		if(questions[count].answerKey==="B"){ b.classList.toggle("WOOHOO"); if(selectedAnswer[0].dataset.choice!=="A"){a.classList.toggle("OHNO");}if(selectedAnswer[0].dataset.choice!=="C"){c.classList.toggle("OHNO");}if(selectedAnswer[0].dataset.choice!=="D"){d.classList.toggle("OHNO");}
+		}
+		if(questions[count].answerKey==="C"){ c.classList.toggle("WOOHOO"); if(selectedAnswer[0].dataset.choice!=="A"){a.classList.toggle("OHNO");}if(selectedAnswer[0].dataset.choice!=="B"){b.classList.toggle("OHNO");}if(selectedAnswer[0].dataset.choice!=="D"){d.classList.toggle("OHNO");}
+		}
+		if(questions[count].answerKey==="D"){ d.classList.toggle("WOOHOO"); if(selectedAnswer[0].dataset.choice!=="A"){a.classList.toggle("OHNO");}if(selectedAnswer[0].dataset.choice!=="B"){b.classList.toggle("OHNO");}if(selectedAnswer[0].dataset.choice!=="C"){c.classList.toggle("OHNO");}
+		}
+            if(selectedAnswer[0].dataset.choice===questions[count].answerKey){
                 alert('correct answer! :)');
                 if(total[count]===false){
                     score++;
@@ -186,6 +197,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HTML5 Quiz App</title>
   <style>
+*{
+
+ 	 font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+}
     /* Flexbox container to hold and center the quiz container */
     .flex-container {
             display: flex;
@@ -198,8 +213,8 @@
 
         /* Container for the quiz */
         #QuizContainer {
-            width: 500px;
-            height: 600px;
+            width: 50vw;
+            height: 100vh;
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 8px;
@@ -295,6 +310,79 @@
         background-color: red;
         border: 1px solid orange;
     }
+
+	/* CSS */
+	.submit {
+ 	 background-color: #c2fbd7;
+ 	 border-radius: 100px;
+ 	 box-shadow: rgba(44, 187, 99, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
+ 	 color: green;
+  	cursor: pointer;
+	  display: inline-block;
+ 	 font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+ 	 padding: 7px 20px;
+ 	 text-align: center;
+	  text-decoration: none;
+ 	 transition: all 250ms;
+ 	 border: 0;
+ 	 font-size: 16px;
+ 	 user-select: none;
+  	-webkit-user-select: none;
+  	touch-action: manipulation;
+	}
+
+	.submit:hover {
+  	box-shadow: rgba(44,187,99,.35) 0 -25px 18px -14px inset,rgba(44,187,99,.25) 0 1px 2px,rgba(44,187,99,.25) 0 2px 4px,rgba(44,187,99,.25) 0 4px 8px,rgba(44,187,99,.25) 0 8px 16px,rgba(44,187,99,.25) 0 16px 32px;
+ 	transform: scale(1.05) rotate(-1deg);
+	}
+
+	.up {
+ 	 background-color: beige;
+ 	 border-radius: 100px;
+ 	 box-shadow: rgba(55, 140, 135, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
+ 	 color: green;
+  	cursor: pointer;
+	  display: inline-block;
+ 	 font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+ 	 padding: 7px 20px;
+ 	 text-align: center;
+	  text-decoration: none;
+ 	 transition: all 250ms;
+ 	 border: 0;
+ 	 font-size: 16px;
+ 	 user-select: none;
+  	-webkit-user-select: none;
+  	touch-action: manipulation;
+	}
+
+	.up:hover {
+  	box-shadow: rgba(44,187,99,.35) 0 -25px 18px -14px inset,rgba(44,187,99,.25) 0 1px 2px,rgba(44,187,99,.25) 0 2px 4px,rgba(44,187,99,.25) 0 4px 8px,rgba(44,187,99,.25) 0 8px 16px,rgba(44,187,99,.25) 0 16px 32px;
+ 	transform: scale(1.05) rotate(-1deg);
+	}
+
+	.down {
+ 	 background-color: beige;
+ 	 border-radius: 100px;
+ 	 box-shadow: rgba(55, 140, 135, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
+ 	 color: green;
+  	cursor: pointer;
+	  display: inline-block;
+ 	 font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+ 	 padding: 7px 20px;
+ 	 text-align: center;
+	  text-decoration: none;
+ 	 transition: all 250ms;
+ 	 border: 0;
+ 	 font-size: 16px;
+ 	 user-select: none;
+  	-webkit-user-select: none;
+  	touch-action: manipulation;
+	}
+
+	.down:hover {
+  	box-shadow: rgba(44,187,99,.35) 0 -25px 18px -14px inset,rgba(44,187,99,.25) 0 1px 2px,rgba(44,187,99,.25) 0 2px 4px,rgba(44,187,99,.25) 0 4px 8px,rgba(44,187,99,.25) 0 8px 16px,rgba(44,187,99,.25) 0 16px 32px;
+ 	transform: scale(1.05) rotate(-1deg);
+	}
     
   </style>
 </head>
@@ -302,9 +390,10 @@
 <body>
   <h1>Quiz Game!</h1>
   <h3>Try your hand at some of the following questions!</h3>
+
+    <p>select your answer, and submit. only your first submission counts towards your score!</p>
+    <p>feel free to reanswer questions as many time as you like!</p>
   <div class="flex-container">
-    <p style="width:250px; height:250px;">select your answer, and submit. only your first submission counts towards your score!</p>
-    <p style="width:250px; height:250px;">feel free to reanswer questions as many time as you like!</p>
     
     <div id="QuizContainer">
         
@@ -315,12 +404,14 @@
             <li onclick="setQ(this)" id="optionC" data-choice="C">Oxygen levels increased.</li>
             <li onclick="setQ(this)" id="optionD" data-choice="D">Available water increased.</li>
         </ul>
-        <p id="qTracker"></p>
-        <button disabled id="decrem" onclick="decQ()">Previous</button>
-        <button id="increm" onclick="incQ()">Next</button>
-        <button id="submission" onclick="submitQ()" disabled>Submit</button>
-        <p>Correct Answers</p>
-        <p id="scorespot"></p>
+        	<p id="qTracker"></p>
+        	<button disabled id="decrem" class="up" onclick="decQ()">Previous</button>
+        	<button id="increm" class="down" onclick="incQ()">Next</button>
+        	<button class="submit" id="submission" onclick="submitQ()" disabled>Submit</button>
+
+		<p style="padding-left:5px;">Correct Answers</p>
+        	<p style="padding-left:5px;" id="scorespot"></p>
+	</div>
     </div>
   </div>
   <script>
