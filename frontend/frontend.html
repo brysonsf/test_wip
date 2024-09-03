@@ -70,6 +70,10 @@
                 },
                 "question": "Many natural rock formations change color over time. In Utah, for example, iron oxidized and formed red, orange, and yellow rock. Which of the following is the cause of this change?"
             }];
+        function updateScoreDisplay() {
+            document.getElementById("scorespot").innerHTML = score + " / " + questions.length;
+            document.getElementById("qTracker").innerHTML = (count + 1) + " / " + questions.length;
+        }
         function incQ(){
             count++;
             if(count===(questions.length-1)){
@@ -80,8 +84,7 @@
                 document.getElementById("increm").disabled = false;
                 document.getElementById("decrem").disabled = false;
             }
-            document.getElementById("scorespot").innerHTML = score + " / " + questions.length;
-            document.getElementById("qTracker").innerHTML = (count+1) + " / " + questions.length; 
+            updateScoreDisplay();
             if(trackingAnswers[count]!==true){
                 let a = document.getElementById("optionA");
                 let b = document.getElementById("optionB");
@@ -149,8 +152,7 @@
                 document.getElementById("increm").disabled = false;
                 document.getElementById("decrem").disabled = false;
             }
-            document.getElementById("scorespot").innerHTML = score + " / " + questions.length;
-            document.getElementById("qTracker").innerHTML = (count+1) + " / " + questions.length;
+            updateScoreDisplay();
             if(trackingAnswers[count]!==true){
                 let a = document.getElementById("optionA");
                 let b = document.getElementById("optionB");
@@ -468,6 +470,7 @@
         display: inline-block;
         font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
         padding: 7px 20px;
+        margin-top: 10px;
         text-align: center;
         text-decoration: none;
         transition: all 250ms;
@@ -530,6 +533,9 @@
         box-shadow: rgba(44,187,99,.35) 0 -25px 18px -14px inset,rgba(44,187,99,.25) 0 1px 2px,rgba(44,187,99,.25) 0 2px 4px,rgba(44,187,99,.25) 0 4px 8px,rgba(44,187,99,.25) 0 8px 16px,rgba(44,187,99,.25) 0 16px 32px;
         transform: scale(1.05) rotate(-1deg);
     }
+    button {
+        margin: 1px;
+    }
   </style>
 </head>
 
@@ -538,7 +544,6 @@
   <h3>Try your hand at some of the following questions!</h3>
 
     <p>select your answer, and submit. only your first submission counts towards your score!</p>
-    <p>feel free to reanswer questions as many time as you like!</p>
   <div class="flex-container">
     
     <div id="QuizContainer">
@@ -555,7 +560,7 @@
         	<button id="increm" class="down" onclick="incQ()">Next</button>
         	<button class="submit" id="submission" onclick="submitQ()" disabled>Submit</button>
 
-		<p style="padding-left:5px;">Correct Answers</p>
+		    <p style="padding-left:5px;">Correct Answers</p>
         	<p style="padding-left:5px;" id="scorespot"></p>
 	</div>
     </div>
@@ -563,8 +568,7 @@
   <script>
     window.onload = function(){
         // setup once elements are visible
-        document.getElementById("scorespot").innerHTML = score + " / " + questions.length;
-        document.getElementById("qTracker").innerHTML = (count+1) + " / " + questions.length;
+        updateScoreDisplay();
     }
   </script>
 </body>
