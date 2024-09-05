@@ -76,6 +76,7 @@
         }
         function incQ(){
             count++;
+            document.getElementById("submission").classList.remove("up-down-bad");
             if(count===(questions.length-1)){
                 checkQ();
                 document.getElementById("increm").disabled = true;
@@ -89,6 +90,7 @@
             }
             updateScoreDisplay();
             if(trackingAnswers[count]!==true){
+                document.getElementById("submission").classList.add("up-down-bad");
                 let a = document.getElementById("optionA");
                 let b = document.getElementById("optionB");
                 let c = document.getElementById("optionC");
@@ -108,9 +110,9 @@
                 }
                 if(questions[count].answerKey==="C"){ 
                     c.classList.toggle("WOOHOO"); 
-                   a.classList.toggle("OHNO");
-                   b.classList.toggle("OHNO");
-                   d.classList.toggle("OHNO");
+                    a.classList.toggle("OHNO");
+                    b.classList.toggle("OHNO");
+                    d.classList.toggle("OHNO");
                 }
                 if(questions[count].answerKey==="D"){ 
                     d.classList.toggle("WOOHOO"); 
@@ -147,6 +149,7 @@
         }
         function decQ(){
             count--;
+            document.getElementById("submission").classList.remove("up-down-bad");
             if(count===0){
                 document.getElementById("decrem").classList.add("up-down-bad");
                 checkQ();
@@ -160,6 +163,7 @@
             }
             updateScoreDisplay();
             if(trackingAnswers[count]!==true){
+                document.getElementById("submission").classList.add("up-down-bad");
                 let a = document.getElementById("optionA");
                 let b = document.getElementById("optionB");
                 let c = document.getElementById("optionC");
@@ -261,13 +265,14 @@
             let b = document.getElementById("optionB");
             let c = document.getElementById("optionC");
             let d = document.getElementById("optionD");
+            selectedAnswer[0].style.fontWeight = "bold";
             if(trackingAnswers[count]){
                 trackingAnswers[count] = selectedAnswer[0].dataset.choice;
             }else{
                 selectedAnswer[0].classList.toggle("active");
             }
             if(questions[count].answerKey==="A"){ 
-                a.classList.toggle("WOOHOO"); 
+                a.classList.toggle("WOOHOO");
                 if(selectedAnswer[0].dataset.choice!=="B"){b.classList.toggle("OHNO");}if(selectedAnswer[0].dataset.choice!=="C"){c.classList.toggle("OHNO");}if(selectedAnswer[0].dataset.choice!=="D"){d.classList.toggle("OHNO");}
             }
             if(questions[count].answerKey==="B"){ 
@@ -307,14 +312,17 @@
             }
             if(trackingAnswers[count]==='A' || trackingAnswers[count]==='B' || trackingAnswers[count]==='C' || trackingAnswers[count]==='D' ){
                 document.getElementById("submission").disabled = true;
+                document.getElementById("submission").classList.add("up-down-bad");
             }
         }
         function setQ(elm){
             var hold = elm.getAttribute('data-choice');
             elm.classList.toggle("active");
-            document.getElementById("submission").disabled = false;
+                document.getElementById("submission").classList.remove("up-down-bad");
+                document.getElementById("submission").disabled = false;
             if(trackingAnswers[count]==='A' || trackingAnswers[count]==='B' || trackingAnswers[count]==='C' || trackingAnswers[count]==='D' ){
                 document.getElementById("submission").disabled = true;
+                document.getElementById("submission").classList.add("up-down-bad");
             }
             let a = document.getElementById("optionA");
             let b = document.getElementById("optionB");
@@ -585,10 +593,9 @@
         	<button disabled id="decrem" class="up-down-bad down" onclick="decQ()">Previous</button>
         	<button id="increm" class="up" onclick="incQ()">Next</button>
         	<button class="submit" id="submission" onclick="submitQ()" disabled>Submit</button>
-            <span>
-                <p style="padding-left:5px;">Correct Answers</p>
-                <p style="padding-left:5px;" id="scorespot"></p>
-            </span>
+            
+		    <p style="padding-left:5px;">Correct Answers</p>
+        	<p style="padding-left:5px;" id="scorespot"></p>
 	</div>
     </div>
   </div>
