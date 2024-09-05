@@ -86,6 +86,8 @@
         }
 
         function handleNav(direction) {
+
+            /*
             count += direction;
             updateScoreDisplay();
             if(!trackingAnswers[count]){//if answered already
@@ -95,6 +97,35 @@
             resetStyles();
             updateQuestionDisplay();
             updateScoreDisplay();
+            handleSubmittedState();
+            */
+            // Check if the user has completed all questions
+            const allAnswered = total.every(Boolean);
+            
+            // Update the count
+            count += direction;
+            
+            // Ensure count stays within bounds
+            if (count < 0) count = 0;
+            if (count >= questions.length) count = questions.length - 1;
+
+            updateScoreDisplay();
+
+            // If all questions have been answered, just update the score display and return
+            if (allAnswered) {
+                // Update score and answers display without changing the question
+                document.getElementById("scorespot").innerHTML = `${score} / ${questions.length}<br>Your Answers: ${trackingAnswers.join(', ')}<br>Correct answers: ${questions.map(q => q.answerKey).join(', ')}`;
+                document.getElementById("qTracker").innerHTML = `${count + 1} / ${questions.length}`;
+                toggleNavButtons();
+                updateQuestionDisplay();
+                return;
+            }
+
+            // Continue with question navigation if not all questions are answered
+        
+            toggleNavButtons();
+            resetStyles();
+            updateQuestionDisplay();
             handleSubmittedState();
         }
 
@@ -352,7 +383,7 @@
             font-weight: bold;
             margin-right: 15px;
             color: #555;
-            background-color: #ddd;
+            background-color: var(--neutral-color);
             padding: 5px 10px;
             border-radius: 50%;
             display: inline-block;
@@ -399,7 +430,7 @@
             background-color: beige;
             border-radius: 100px;
             box-shadow: rgba(55, 140, 135, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
-            color: green;
+            color: var(--correct-color);
             cursor: pointer;
             display: inline-block;
             font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
@@ -423,7 +454,7 @@
             background-color: beige;
             border-radius: 100px;
             box-shadow: rgba(55, 140, 135, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
-            color: green;
+            color: var(--correct-color);
             cursor: pointer;
             display: inline-block;
             font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
