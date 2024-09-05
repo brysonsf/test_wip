@@ -1,0 +1,504 @@
+<!--
+- Quiz Application Front-End Demo developed by Bryson Sullivan-Farrell 
+- This app uses native HTML, CSS, and JS to demo a quiz application.
+- Styled to track your selections and submissions.
+- Functions as you would expect a normal quiz to.
+- Notes:
+ - On mobile, you can get questions styled actively, even after disabled. This active / hover is a more complex and essential feature for touch interactions vs computer mouse.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        var questions = [{
+            "answerKey": "B",
+            "choices": {
+                //"label": ["A", "B", "C", "D"],
+                "text": ["Shady areas increased.", "Food sources increased.", "Oxygen levels increased.", "Available water increased."]
+            },
+                "question": "One year, the oak trees in a park began producing more acorns than usual. The next year, the population of chipmunks in the park also increased. Which best explains why there were more chipmunks the next year?"
+            },{
+                "answerKey": "B",
+                "choices": {
+                    "text": [ "a leg muscle relaxing after exercise", "a bacterial population in the bloodstream", "several viral particles on the skin", "carbohydrates being digested in the stomach" ]
+
+                },
+                "question": "Which factor will most likely cause a person to develop a fever?"
+            },{
+                "answerKey": "A",
+                "choices": {
+                    "text":["contact lens", "motorcycle", "raincoat", "coffee pot"]
+                },
+                "question": "Which of the following is an example of an assistive device?"
+            },{
+                "answerKey": "D",
+                "choices": {
+                    "text":["cause the charge to build.", "increase and decrease the voltage.", "cause the current to change direction.", "stop and start the flow of current." ]
+                },
+                "question": "When a switch is used in an electrical circuit, the switch can"
+            },{
+                "answerKey": "A",
+                "choices": {
+                    "text":["muscular and skeletal", "digestive and muscular", "skeletal and respiratory", "respiratory and digestive"]
+                },
+                "question": "Which two body systems are directly involved in movement?"
+            },{
+                "answerKey": "C",
+                "choices": {
+                    "text":["boiling", "melting", "freezing", "evaporating"]
+                },
+                "question": "Which change in the state of water particles causes the particles to become arranged in a fixed position?"
+            },{
+                "answerKey": "B",
+                "choices": {
+                    "text":["basalt", "iron", "magma", "quartz"]
+                },
+                "question": "Earth's core is primarily composed of which of the following materials?"
+            },{
+                "answerKey": "C",
+                "choices": {
+                    "text":["pairing of chromosomes", "creation of haploid gametes", "segregation of alleles", "separation of chromatids"]
+                },
+                "question": "Which of the following events during meiosis contributes most to the variation within a species?"
+            },{
+                "answerKey": "B",
+                "choices": {
+                    "text":["the intestine, with squeezing.", "the mouth, with chewing and saliva.", "the stomach, with churning and acid.", "the esophagus, with pushing towards the stomach."]
+                },
+                "question": "In humans, the digestion process begins in"
+            },{
+                "answerKey": "A",
+                "choices": {
+                    "text":["chemical weathering", "mechanical weathering", "water erosion", "wind erosion"]
+                },
+                "question": "Many natural rock formations change color over time. In Utah, for example, iron oxidized and formed red, orange, and yellow rock. Which of the following is the cause of this change?"
+            }
+        ];
+        
+        let total = Array(questions.length).fill(false);
+        let trackingAnswers = Array(questions.length).fill(true);
+        let score = 0;
+        let count = 0;
+
+        function updateScoreDisplay() {
+            document.getElementById("scorespot").innerHTML = `${score} / ${questions.length}`;
+            document.getElementById("qTracker").innerHTML = `${count + 1} / ${questions.length}`;
+        }
+
+        function handleNav(direction) {
+            count += direction;
+            updateScoreDisplay();
+            if(!trackingAnswers[count]){//if answered already
+                return;
+            }
+            toggleNavButtons();
+            resetStyles();
+            updateQuestionDisplay();
+            updateScoreDisplay();
+            handleSubmittedState();
+        }
+
+        function toggleNavButtons() {
+            const submitButton = document.getElementById("submission");
+            const prevButton = document.getElementById("decrem");
+            const nextButton = document.getElementById("increm");
+
+            // Toggle the previous button
+            prevButton.disabled = count === 0;
+
+            if (count === 0) {
+                prevButton.classList.add("up-down-bad");
+            } else {
+                prevButton.classList.remove("up-down-bad");
+            }
+
+            // Toggle the next button
+            nextButton.disabled = count === questions.length - 1;
+            if (count === questions.length - 1) {
+                nextButton.classList.add("up-down-bad");
+            } else {
+                nextButton.classList.remove("up-down-bad");
+            }
+            // Toggle the submit button based on whether the user has already answered the question
+            const hasSubmitted = total[count];  // `total[count]` indicates if the question was already answered
+            submitButton.disabled = hasSubmitted;
+            if (hasSubmitted) {
+                submitButton.classList.add("up-down-bad");
+            } else {
+                submitButton.classList.remove("up-down-bad");
+            }
+        }
+
+        function resetStyles() {
+            ["A", "B", "C", "D"].forEach(letter => {
+                const option = document.getElementById(`option${letter}`);
+                option.classList.remove("WOOHOO", "OHNO", "active");
+                option.style.fontWeight = "normal";
+            });
+        }
+
+        function updateQuestionDisplay() {
+            const currentQuestion = questions[count];
+            document.getElementById("questionSlot").innerHTML = currentQuestion.question;
+            
+            // Set choices for the current question
+            ["A", "B", "C", "D"].forEach((letter, index) => {
+                const option = document.getElementById(`option${letter}`);
+                option.innerHTML = currentQuestion.choices.text[index];
+                option.classList.remove("active"); // Remove active class from all options
+                option.style.fontWeight = "normal"; // Reset bolding
+            });
+
+            // If the user already selected an answer for this question, bold it and mark it as active
+            if (trackingAnswers[count]) {
+                ["A", "B", "C", "D"].forEach((letter, index) => {
+                    const option = document.getElementById(`option${letter}`);
+                    if (letter === trackingAnswers[count]) {
+                        document.getElementById(`option${letter}`).disabled = true;
+                        option.style.fontWeight = "bold"; // Bold the selected answer
+                    }
+                });
+            }
+        }
+
+        function handleSubmittedState() {
+            if (trackingAnswers[count] !== true) {
+                document.getElementById("submission").disabled = true;
+                markAnswer(questions[count].answerKey);
+            }
+        }
+
+        function submitQ() {
+            const selected = document.querySelector(".active");
+            selected.classList.toggle("active");
+            if (!selected) {
+                alert("Please select an answer before submitting.");
+                return;
+            }
+
+            const selectedAnswer = selected.dataset.choice;
+            if (total[count]) {
+                // Already submitted, do nothing
+                return;
+            }
+
+            // Record the answer
+            trackingAnswers[count] = selectedAnswer;
+            total[count] = true;
+
+            // Mark answers with correct/incorrect classes
+            markAnswer(questions[count].answerKey);
+
+            // Set fontWeight for the selected answer
+            ["A", "B", "C", "D"].forEach(letter => {
+                const option = document.getElementById(`option${letter}`);
+                if (letter === selectedAnswer) {
+                    option.style.fontWeight = "bold";
+                } else {
+                    option.style.fontWeight = "normal";
+                }
+            });
+
+            // Disable all options after submission
+            ["A", "B", "C", "D"].forEach(letter => {
+                const option = document.getElementById(`option${letter}`);
+                option.disabled = true;
+            });
+
+            // Update score and provide feedback
+            if (selectedAnswer === questions[count].answerKey) {
+                alert('Correct answer! :)');
+                score += 1;
+            } else {
+                alert('Incorrect answer! :(');
+            }
+
+            updateScoreDisplay();
+
+            // Check if all questions have been answered
+            if (total.every(Boolean)) {
+                alert(`You got ${score} out of ${questions.length} questions correct.`);
+                console.log(trackingAnswers);
+                let qs = '';
+                questions.forEach(question => {
+                    qs += question.answerKey + ', ';
+                });
+                document.getElementById("scorespot").innerHTML = `${score} / ${questions.length}<br>Your Answers: ${trackingAnswers.join(', ')}<br>Correct answers: ${qs}`;
+                document.getElementById("qTracker").innerHTML = `${count + 1} / ${questions.length}`;
+            }
+
+            // Disable the submit button after submission
+            document.getElementById("submission").disabled = true;
+            document.getElementById("submission").classList.add("up-down-bad");
+        }
+
+        function markAnswer(correctAnswer) {
+            ["A", "B", "C", "D"].forEach(letter => {
+                const option = document.getElementById(`option${letter}`);
+                if (letter === correctAnswer) {
+                    option.classList.add("WOOHOO");
+                } else {
+                    option.classList.add("OHNO");
+                }
+            });
+        }
+
+        function setQ(elm) {
+            const choice = elm.getAttribute('data-choice');
+            if (total[count]) {
+                return; // Don't allow selection if the question has been answered
+            }
+            resetStyles();
+            elm.classList.add("active");
+            document.getElementById("submission").disabled = false;
+        }
+
+        window.onload = function () {
+            updateScoreDisplay();
+            updateQuestionDisplay();
+        }
+    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HTML5 Quiz App</title>
+    <style>
+        *{
+        
+              font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+        }
+            /* Flexbox container to hold and center the quiz container */
+            .flex-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                padding: 20px;
+                background-color: #f0f0f0;
+            }
+        
+            /* Container for the quiz */
+            #QuizContainer {
+                width: 50vw;
+                height: 100vh;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                background-color: #f9f9f9;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+        
+            /* Styling the question */
+            #questionSlot{
+                font-size: 1.2rem;
+                font-weight: bold;
+                width: auto;
+                height: 150px; /* Limit the height of the question text */
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                line-clamp: 6;
+                -webkit-line-clamp: 6; /* Limits text to 3 lines */
+                overflow-x: auto;
+                overflow-y: auto;
+            }
+            #qTracker{
+                height: 25px;
+            }
+            /* Styling the unordered list */
+            ul {
+                list-style-type: none;
+                padding: 0;
+            }
+        
+            /* Styling each list item */
+            li {
+                background-color: #e9e9e9;
+                margin: 10px 0;
+                padding: 15px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 1rem;
+                transition: background-color 0.3s ease;
+                display: flex;
+                align-items: center;
+            }
+        
+            /* Adding hover effect */
+            li:hover {
+                background-color: #d4d4d4;
+                font-weight: bold;
+            }
+        
+            /* Styling the letter options */
+            li::before {
+                content: attr(data-choice);
+                font-weight: bold;
+                margin-right: 15px;
+                color: #555;
+                background-color: #ddd;
+                padding: 5px 10px;
+                border-radius: 50%;
+                display: inline-block;
+                min-width: 30px;
+                text-align: center;
+            }
+        
+            /* Active or selected state */
+            li.active {
+                background-color: #c0e1ff;
+                border: 1px solid #007bff;
+                font-weight: bold;
+            }
+            li::after {
+                font-weight:bold;
+            }
+        
+            /* Responsive adjustments */
+            @media (max-width: 600px) {
+                #quiz-container {
+                    padding: 15px;
+                }
+        
+                li {
+                    padding: 10px;
+                }
+        
+                li::before {
+                    margin-right: 10px;
+                    padding: 4px 8px;
+                }
+        
+                #quiz-container p {
+                    font-size: 1rem;
+                }
+            }
+            .WOOHOO{
+                background-color: green;
+                border: 1px solid goldenrod;
+            }
+            .OHNO{
+                background-color: red;
+                border: 1px solid orange;
+            }
+        
+            .submit {
+                background-color: #c2fbd7;
+                border-radius: 100px;
+                box-shadow: rgba(44, 187, 99, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
+                color: green;
+                cursor: pointer;
+                display: inline-block;
+                font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+                padding: 7px 20px;
+                margin-top: 10px;
+                text-align: center;
+                text-decoration: none;
+                transition: all 250ms;
+                border: 0;
+                font-size: 16px;
+                user-select: none;
+                -webkit-user-select: none;
+                touch-action: manipulation;
+            }
+        
+            .submit:hover {
+                box-shadow: rgba(44,187,99,.35) 0 -25px 18px -14px inset,rgba(44,187,99,.25) 0 1px 2px,rgba(44,187,99,.25) 0 2px 4px,rgba(44,187,99,.25) 0 4px 8px,rgba(44,187,99,.25) 0 8px 16px,rgba(44,187,99,.25) 0 16px 32px;
+                transform: scale(1.05) rotate(-1deg);
+            }
+        
+            .up {
+                background-color: beige;
+                border-radius: 100px;
+                box-shadow: rgba(55, 140, 135, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
+                color: green;
+                cursor: pointer;
+                display: inline-block;
+                font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+                padding: 7px 20px;
+                text-align: center;
+                text-decoration: none;
+                transition: all 250ms;
+                border: 0;
+                font-size: 16px;
+                user-select: none;
+                -webkit-user-select: none;
+                touch-action: manipulation;
+            }
+        
+            .up:hover {
+                box-shadow: rgba(44,187,99,.35) 0 -25px 18px -14px inset,rgba(44,187,99,.25) 0 1px 2px,rgba(44,187,99,.25) 0 2px 4px,rgba(44,187,99,.25) 0 4px 8px,rgba(44,187,99,.25) 0 8px 16px,rgba(44,187,99,.25) 0 16px 32px;
+                transform: scale(1.05) rotate(-1deg);
+            }
+        
+            .down {
+                background-color: beige;
+                border-radius: 100px;
+                box-shadow: rgba(55, 140, 135, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
+                color: green;
+                cursor: pointer;
+                display: inline-block;
+                font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+                padding: 7px 20px;
+                text-align: center;
+                text-decoration: none;
+                transition: all 250ms;
+                border: 0;
+                font-size: 16px;
+                user-select: none;
+                -webkit-user-select: none;
+                touch-action: manipulation;
+            }
+        
+            .up-down-bad{
+                background-color: #e0e0e0; /* Light grey background */
+                border-radius: 100px;
+                box-shadow: none; /* Remove the box shadow */
+                color: #9e9e9e; /* Grey text color */
+                cursor: not-allowed; /* Change the cursor to indicate it's disabled */
+                display: inline-block;
+                font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto, sans-serif;
+                padding: 7px 20px;
+                text-align: center;
+                text-decoration: none;
+                transition: all 250ms;
+                border: 0;
+                font-size: 16px;
+                user-select: none;
+                -webkit-user-select: none;
+                touch-action: manipulation;
+                opacity: 0.6; /* Lower the opacity for a more "disabled" effect */
+            }
+        
+            .down:hover {
+                box-shadow: rgba(44,187,99,.35) 0 -25px 18px -14px inset,rgba(44,187,99,.25) 0 1px 2px,rgba(44,187,99,.25) 0 2px 4px,rgba(44,187,99,.25) 0 4px 8px,rgba(44,187,99,.25) 0 8px 16px,rgba(44,187,99,.25) 0 16px 32px;
+                transform: scale(1.05) rotate(-1deg);
+            }
+            button {
+                margin: 1px;
+            }
+          </style>
+</head>
+<body>
+    <h1>Quiz Game!</h1>
+    <h3>Try your hand at some of the following questions!</h3>
+
+    <p>Select your answer, and press submit to confirm. Only your first submission counts towards your score!</p>
+    <div class="flex-container">
+        <div id="QuizContainer">
+            <p id="questionSlot"></p>
+            <ul>
+                <li onclick="setQ(this)" id="optionA" data-choice="A"></li>
+                <li onclick="setQ(this)" id="optionB" data-choice="B"></li>
+                <li onclick="setQ(this)" id="optionC" data-choice="C"></li>
+                <li onclick="setQ(this)" id="optionD" data-choice="D"></li>
+            </ul>
+            <p id="qTracker"></p>
+            <button id="decrem" class="up-down-bad down" onclick="handleNav(-1)" disabled>Previous</button>
+            <button id="increm" class="up" onclick="handleNav(1)">Next</button>
+            <button class="submit" id="submission" onclick="submitQ()" disabled>Submit</button>
+            <p>Correct Answers</p>
+            <p id="scorespot"></p>
+        </div>
+    </div>
+</body>
+</html>
